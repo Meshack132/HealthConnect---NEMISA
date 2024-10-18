@@ -17,12 +17,24 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'  # Cache npm modules to speed up workflow
 
-    - name: Build
+    - name: Install Dependencies
       run: |
         npm install
+
+    - name: Run Grunt
+      run: |
         grunt
+
+    - name: Run Tests
+      run: |
+        npm test  # Ensure there's a test script in package.json for running tests
+
+    - name: Check Linting
+      run: |
+        npm run lint  # Ensure there's a lint script in package.json or install linters like ESLint
